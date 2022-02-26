@@ -24,3 +24,16 @@ There are a few things you will need before getting started
  * You have access to [Docker Hub Repository](https://hub.docker.com/) to store container images.
 
  * You have an account in [Github](https://github.com/) to clone the app Petclinic
+
+## 1. Prepare a Kubernetes Cluster and clone Sample Application
+
+We will deploy a Kind cluster using Docker Desktop and install [Contour](https://projectcontour.io/) on it to help provide Ingress management. Contour along with [Envoy](https://www.envoyproxy.io/) Proxy will help create service and URL management for Knative.
+
+```
+brew install kind
+```
+Create a Kubernetes Cluster called tdp-guide and set Kubectl context to tdp-guide
+```
+kind create cluster --name tdp-guide
+kubectl cluster-info --context kind-tdp-guide
+```
