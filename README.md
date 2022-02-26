@@ -13,3 +13,14 @@ A sample application called [Petclinic](https://github.com/Boskey/spring-petclin
 - [Kind](https://kind.sigs.k8s.io/) as a local Kubernetes Cluster
 
 In summary, our overall workflow will be to take the sample application in Spring, use Cloud Native Buildpacks/kpack to convert source code into a container image, use Knative Serving to create a deployment using ArgoCD. This process will eliminate the need to write Dockerfiles or any Kubernetes resource YAML files.
+
+## Assumptions and prerequisites
+There are a few things you will need before getting started
+
+ * You have [kubectl](https://kubernetes.io/docs/tasks/tools/), a tool to interact with Kubernetes Cluster installed.
+
+ * [Docker Desktop](https://www.docker.com/products/docker-desktop) is installed on your laptop/machine with at least 4 GB of memory and 4 CPU’s allocated to Docker Resources.
+
+ * You have access to [Docker Hub Repository](https://hub.docker.com/) to store container images.
+
+ * You have an account in [Github](https://github.com/) to clone the app Petclinic
