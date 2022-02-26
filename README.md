@@ -71,3 +71,40 @@ kubectl create secret docker-registry tutorial-registry-credentials \
     --namespace default
 ```
 Cloud Native Buildpacks create Container images using a builder that uses a predefined stack of container image layers. You can define custom stack, store and builders. For this guide, we are using standard definitions.
+
+```
+kubectl apply -f https://raw.githubusercontent.com/Boskey/spring-petclinic/main/kpack-config/sa.yaml
+kubectl apply -f https://raw.githubusercontent.com/Boskey/spring-petclinic/main/kpack-config/store.yaml
+kubectl apply -f https://raw.githubusercontent.com/Boskey/spring-petclinic/main/kpack-config/stack.yaml
+kubectl apply -f https://raw.githubusercontent.com/Boskey/spring-petclinic/main/kpack-config/builder.yaml
+```
+### 5. Install and Configure ArgoCD
+```
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+```
+Install ArgoCD CLI
+```
+brew install argocd
+```
+Since ArgoCD is installed on a Kind cluster, it does not have a Kubernetes Load Balancing Service type to expose the ArgoCD service. We will manually expose the ArgoCD service using port-forward
+
+On a new Terminal,
+```
+kubectl port-forward svc/argocd-server -n argocd 8080:443
+```
+Fetch ArgoCD credentials to login via CLI
+
+```
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+```
+Copy the output of the above command, that is the admin password for ArgoCD Login to ArgoCD
+
+```
+argocd login localhost:8080
+```
+username: admin
+
+password: <copy-paste from the command above>
+
+We have now installed Knative Serving, Cloud Native Buildpacks and ArgoCD. Its time to implement a workflow that will take our source code and convert it into a URL.
