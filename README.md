@@ -56,4 +56,18 @@ kubectl patch configmap/config-network \
   --type merge \
   --patch '{"data":{"ingress.class":"contour.ingress.networking.knative.dev"}}'
   ```
-  
+### 4. Install and Configure Cloud Native Buildpack using kpack
+```
+kubectl apply -f https://github.com/pivotal/kpack/releases/download/v0.2.2/release-0.2.2.yaml
+```
+Cloud Native Buildpacks will need a Repository to Store container images that it will be building. This could be any OCI compliant repository, for this guide we will use Docker Hub. You can easily create and account in Docker Hub if you don’t have one.
+
+We need to create a Docker Hub account credentials secret in Kubernetes. Use the below command and change the docker-username to the your repo name in Docker Hub. Change the docker-password to your account password.
+```
+kubectl create secret docker-registry tutorial-registry-credentials \
+    --docker-username=abc \
+    --docker-password=********* \
+    --docker-server=https://index.docker.io/v1/\
+    --namespace default
+```
+Cloud Native Buildpacks create Container images using a builder that uses a predefined stack of container image layers. You can define custom stack, store and builders. For this guide, we are using standard definitions.
