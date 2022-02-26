@@ -25,7 +25,7 @@ There are a few things you will need before getting started
 
  * You have an account in [Github](https://github.com/) to clone the app Petclinic
 
-## 1. Prepare a Kubernetes Cluster and clone Sample Application
+### 1. Prepare a Kubernetes Cluster and clone Sample Application
 
 We will deploy a Kind cluster using Docker Desktop and install [Contour](https://projectcontour.io/) on it to help provide Ingress management. Contour along with [Envoy](https://www.envoyproxy.io/) Proxy will help create service and URL management for Knative.
 
@@ -37,3 +37,23 @@ Create a Kubernetes Cluster called tdp-guide and set Kubectl context to tdp-guid
 kind create cluster --name tdp-guide
 kubectl cluster-info --context kind-tdp-guide
 ```
+Log onto Github and Fork the repository for our sample app [Petclinic](https://github.com/Boskey/spring-petclinic)
+
+### 2. Install Knative Serving
+```
+kubectl apply -f https://github.com/knative/serving/releases/download/v0.22.0/serving-crds.yaml
+kubectl apply -f https://github.com/knative/serving/releases/download/v0.22.0/serving-core.yaml
+```
+### 3. Install Contour Ingress Controller
+```
+kubectl apply -f https://github.com/knative/net-contour/releases/download/v0.22.0/contour.yaml
+kubectl apply -f https://github.com/knative/net-contour/releases/download/v0.22.0/net-contour.yaml
+```
+Change Knative Serving config to use Contour Ingress
+```
+kubectl patch configmap/config-network \
+  --namespace knative-serving \
+  --type merge \
+  --patch '{"data":{"ingress.class":"contour.ingress.networking.knative.dev"}}'
+  ```
+  
