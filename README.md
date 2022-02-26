@@ -108,3 +108,35 @@ username: admin
 password: <copy-paste from the command above>
 
 We have now installed Knative Serving, Cloud Native Buildpacks and ArgoCD. Its time to implement a workflow that will take our source code and convert it into a URL.
+
+### 6. Build Container Image using Cloud Native Buildpacks
+We will be using the Petclinic app, the file petclinic-image-build.yaml tells kpack where the source code is via the spec.source.git.url , where to upload and what tag to use for the final container image using spec.tag.
+
+Copy this file and change the spec.tag to your <docker-repo>/<app-name> and change the spec.source.git.url to your Git Repo for Petclinic you forked in Step 1
+
+```
+apiVersion: kpack.io/v1alpha1
+kind: Image
+metadata:
+  name: petclinic-image
+  namespace: default
+spec:
+  tag: seletreby/app
+  serviceAccount: tutorial-service-account
+  builder:
+    name: my-builder
+    kind: Builder
+  source:
+    git:
+      url: https://github.com/seletreby310/spring-petclinic-1
+      revision: 8ecceceb45a77dbc0cf204d80d27d73a6b5552b3
+```
+Apply the file using Kubectl
+```
+kubectl apply -f petclinic-image-build.yaml
+```
+This process will take around 5 -10 Minutes to finish depending on the resources Docker Desktop has. Keep watching the images CRD to see if the images is finished building.
+```
+watch kubectl get images.kpack.io
+```
+Once the image is build you should see the output of the Docker Hub URL where the Container image is located. The output should be similar to this. Capture the Image location from your command to list images.
